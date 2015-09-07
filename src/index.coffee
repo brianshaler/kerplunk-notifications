@@ -23,19 +23,16 @@ module.exports = (System) ->
         allNotifications: notifications
 
   refreshNotifications = ->
-    deferred = Promise.defer()
-    Notification
+    mpromise = Notification
     .where
       read: 0
     .sort
       createdAt: -1
-    .find (err, notifications) ->
-      return deferred.reject err if err
-      console.error err if err
+    .find()
+    Promise(mpromise).then (notifications) ->
       cachedNotifications = notifications
       console.log "refreshNotifications found #{notifications.length} unread notifications (#{cachedNotifications.length})"
-      deferred.resolve notifications
-    deferred.promise
+      notifications
 
   broadcastNotification = (notification) ->
     notificationSocket.broadcast
@@ -51,14 +48,12 @@ module.exports = (System) ->
     data
 
   createNotification = (data) ->
-    deferred = Promise.defer()
     console.log 'new notification', data.navUrls[0]
     notification = new Notification data
-    notification.save (err) ->
-      return deferred.reject err if err
+    mpromise = notification.save()
+    Promise(mpromise).then ->
       cachedNotifications.push notification
-      deferred.resolve notification
-    deferred.promise
+      notification
 
   flashMessage = (data) ->
     notificationSocket.broadcast
@@ -70,28 +65,27 @@ module.exports = (System) ->
     console.log 'marking url as read', url
     return data unless url.length > 0
 
-    deferred = Promise.defer()
-    where =
-      navUrls: url
-      read: 0
-    delta =
-      read: 1
-    options =
-      multi: true
-    Notification
-    .update where, delta, options, (err, updateCount) ->
-      return deferred.reject err if err
-      console.log where, delta, options, updateCount
-      console.log "updated #{JSON.stringify updateCount} notifications"
-      refreshNotifications()
-      .then (notifications) ->
-        # notificationSocket.broadcast
-        #   clearNotificationsUrl: url
-        #   # state:
-        #   #   notifications: notifications
-        broadcastNotifications()
-        deferred.resolve data
-    deferred.promise
+    Promise.promise (resolve, reject) ->
+      where =
+        navUrls: url
+        read: 0
+      delta =
+        read: 1
+      options =
+        multi: true
+      Notification
+      .update where, delta, options, (err, updateCount) ->
+        return reject err if err
+        console.log where, delta, options, updateCount
+        console.log "updated #{JSON.stringify updateCount} notifications"
+    .then refreshNotifications
+    .then (notifications) ->
+      # notificationSocket.broadcast
+      #   clearNotificationsUrl: url
+      #   # state:
+      #   #   notifications: notifications
+      broadcastNotifications()
+      data
 
   # test = ->
   #   System.do
