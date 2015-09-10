@@ -1,6 +1,6 @@
 # kerplunk-notifications
 
-[Kerplunk](https://github.com/brianshaler/kerplunk) plugin. 
+[Kerplunk](https://github.com/brianshaler/kerplunk) plugin. Basic Notification support for plugins with websocket push to the web dashboard
 
 [![Build Status](https://travis-ci.org/brianshaler/kerplunk-notifications.svg)](https://travis-ci.org/brianshaler/kerplunk-notifications)
 [![npm version](https://img.shields.io/npm/v/kerplunk-notifications.svg)](https://www.npmjs.com/package/kerplunk-notifications)
