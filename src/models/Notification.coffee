@@ -31,6 +31,7 @@ module.exports = (mongoose) ->
     read:
       type: Number # mongoose was having trouble setting read:true.. :(
       default: 0
+      index: true
     component:
       type: String
     createdAt:
