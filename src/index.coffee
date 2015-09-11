@@ -34,6 +34,10 @@ module.exports = (System) ->
       console.log "refreshNotifications found #{notifications.length} unread notifications (#{cachedNotifications.length})"
       notifications
 
+  postInit = ->
+    refreshNotifications()
+    .then ->
+
   broadcastNotification = (notification) ->
     notificationSocket.broadcast
       notifications: [notification]
@@ -119,8 +123,8 @@ module.exports = (System) ->
         post: broadcastNotifications
       flash:
         do: flashMessage
-    # init:
-    #   post: test
+    init:
+      post: postInit
 
   init: (next) ->
     notificationSocket = System.getSocket 'kerplunk'
@@ -149,15 +153,4 @@ module.exports = (System) ->
           state:
             notifications: cachedNotifications
 
-    refreshNotifications()
-    .then ->
-      next()
-    # return next null, console.log 'skipping kerplunk-notifications stuff'
-
-    ###
-    Notification.remove {navUrls: url}, (err) ->
-      console.error err if err
-      notificationSocket.broadcast
-        clearNotificationsUrl: url
-      next err
-    ###
+    next()
