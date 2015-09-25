@@ -2,7 +2,7 @@
   "name": "kerplunk-notifications",
   "displayName": "Notifications",
   "description": "Basic Notification support for plugins with websocket push to the web dashboard",
-  "version": "0.0.5",
+  "version": "0.1.0",
   "keywords": [
     "kerplunk-plugin",
     "kp:Admin"
