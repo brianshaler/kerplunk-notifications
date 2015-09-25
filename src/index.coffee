@@ -111,8 +111,10 @@ module.exports = (System) ->
       nav:
         Admin:
           Notifications: '/admin/notifications'
-      styles:
-        'kerplunk-notifications/css/notifications.css': ['/admin/**', '/admin/']
+      css:
+        'kerplunk-notifications:list': 'kerplunk-notifications/css/notifications.css'
+        'kerplunk-notifications:navbar': 'kerplunk-notifications/css/notifications.css'
+        'kerplunk-notifications:flash': 'kerplunk-notifications/css/notifications.css'
   events:
     notification:
       create:
