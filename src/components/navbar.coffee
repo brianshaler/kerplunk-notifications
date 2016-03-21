@@ -32,8 +32,8 @@ module.exports = React.createFactory React.createClass
       @setState
         expanded: false
     else
-      prevIds = _.pluck (prevProps.notifications ? []), '_id'
-      newIds = _.pluck (@props.notifications ? []), '_id'
+      prevIds = _.map (prevProps.notifications ? []), '_id'
+      newIds = _.map (@props.notifications ? []), '_id'
       if !diffArrays prevIds, newIds
         changed = true
     if changed
